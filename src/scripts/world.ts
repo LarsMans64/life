@@ -14,13 +14,13 @@ const collideStrength = 50;
 const dudeRadius = .3;
 const dudeMass = Math.PI * dudeRadius ** 2;
 
-const dudes: Dude[] = makeDudes(70, 4);
+const dudes: Dude[] = makeDudes(50, 4);
 
 const familyBeef: Map<number, Map<number, number>> = new Map([
     [1, new Map([[1, 6], [2, 10], [3, 10], [4, -5]])],
-    [2, new Map([[1, -20], [2, -4], [3, 4], [4, 3]])],
+    [2, new Map([[1, -20], [2, 0], [3, -20], [4, 20]])],
     [3, new Map([[1, -7], [2, 0], [3, 15], [4, -3]])],
-    [4, new Map([[1, 20], [2, 1], [3, 0], [4, 3]])],
+    [4, new Map([[1, -10], [2, 1], [3, 0], [4, 8]])],
 ]);
 
 const colors: Map<number, string> = new Map([
@@ -42,7 +42,7 @@ export function updateWorld(dt: number) {
                 const beef = familyBeef.get(dude.family)?.get(other.family) ?? 0;
                 const relative = other.pos.sub(dude.pos);
                 const force = relative.normalize().scale((beefStrength * beef) * (dudeMass ** 2) / (relative.length() ** 2));
-                const no = relative.normalize().scale(collideStrength * ((dudeMass ** 2)) / (relative.length() ** 4));
+                const no = relative.normalize().scale(collideStrength * ((dudeMass ** 2)) / (relative.length() ** 6));
                 const total = force.sub(no);
                 dude.acc = dude.acc.add(total.normalize().scale(Math.min(1000, total.length())));
             }
@@ -54,7 +54,7 @@ export function updateWorld(dt: number) {
 
         dude.vel = dude.vel.add(dude.acc.scale(dt));
 
-        const velMax = 15 ** dudeRadius;
+        const velMax = 20 ** dudeRadius;
         dude.vel.x = clamp(-velMax, dude.vel.x, velMax);
         dude.vel.y = clamp(-velMax, dude.vel.y, velMax);
 
