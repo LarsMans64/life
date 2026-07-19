@@ -109,11 +109,48 @@ function makeDude(pos: Vec, family: number) {
 export function randomizeFamilyBeef() {
     const families = 4;
     familyBeef = new Map();
-    for (let i = 0; i < families; i++) {
+    for (let i = 1; i <= families; i++) {
         const family = new Map<number, number>();
-        for (let j = 0; j < families; j++) {
-            family.set(j, (Math.random() - 0.5) * 2 * beefSpread);
+        for (let j = 1; j <= families; j++) {
+            family.set(j, Math.round((Math.random() - 0.5) * 2 * beefSpread));
         }
         familyBeef.set(i, family);
     }
+}
+
+export function familyBeefToString() {
+    let result = "1v";
+    for (const [family, beefs] of familyBeef.entries()) {
+        result += family + "|";
+        for (const [f, beef] of beefs.entries()) {
+            result += f + ":" + beef + ",";
+        }
+        result += ";";
+    }
+    return result;
+}
+
+export function readFamilyBeef(text: string) {
+    const result: FamilyBeef = new Map();
+
+    const [version, data] = text.split("v");
+
+    if (version !== "1") {
+        return;
+    }
+
+    data?.split(";").forEach(s => {
+        const [family, beefs] = s.split("|");
+        const beefMap: Map<number, number> = new Map();
+        beefs?.split(",").forEach(s => {
+            const [f, beef] = s.split(":");
+            if (f && beef && f.length > 0 && beef.length > 0) {
+                beefMap.set(Number(f), Number(beef));
+            }
+        });
+        if (family && family.length > 0)
+        result.set(Number(family), beefMap);
+    });
+
+    familyBeef = result;
 }

@@ -2,7 +2,15 @@
 
 :root {
     --col-text: #e6eaea;
-    --col-bg: #121217;
+
+    --col-bg-1: rgb(18 18 23);
+    --col-bg-2: rgb(31 36 44 / 0.2);
+    --col-bg-3: rgb(58 76 96 / 0.2);
+    --col-bg-4: rgb(100 122 140 / 0.2);
+
+    --col-border-1: rgb(53 83 87 / 0.3);
+    --col-border-2: rgb(72 108 113 / 0.3);
+    --col-border-3: rgb(107 148 154 / 0.3);
 }
 
 body {
@@ -10,7 +18,7 @@ body {
     width: 100vw;
     height: 100vh;
 
-    background-color: var(--col-bg);
+    background-color: var(--col-bg-1);
     color: var(--col-text);
     font-family: "Fira Code", monospace;
 

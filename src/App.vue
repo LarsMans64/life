@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import {onMounted, ref, useTemplateRef} from "vue";
-import {drawWorld, randomizeFamilyBeef, updateWorld} from "@/scripts/world.ts";
+import {onMounted, useTemplateRef} from "vue";
+import {drawWorld, familyBeefToString, randomizeFamilyBeef, readFamilyBeef, updateWorld} from "@/scripts/world.ts";
 import {setupCamera, updateCamera} from "@/scripts/camera.ts";
 import {dudeInfo, simulationSpeed} from "@/scripts/global.ts";
 
@@ -36,6 +36,14 @@ function update() {
 
   drawWorld(ctx);
 }
+
+function copySettings() {
+  navigator.clipboard.writeText(familyBeefToString());
+}
+
+function pasteSettings() {
+  navigator.clipboard.readText().then(value => readFamilyBeef(value));
+}
 </script>
 
 <template>
@@ -54,6 +62,12 @@ function update() {
     <div>
       <button @click="randomizeFamilyBeef">Randomize forces</button>
     </div>
+    <div>
+      <button @click="copySettings">Copy settings</button>
+    </div>
+    <div>
+      <button @click="pasteSettings()">Paste settings</button>
+    </div>
   </div>
 </template>
 
@@ -70,8 +84,8 @@ canvas {
   min-width: 15rem;
 
   backdrop-filter: blur(15px);
-  background: rgb(31 36 43 / 0.39);
-  border: 1px solid rgb(53 83 87 / 0.3);
+  background: var(--col-bg-2);
+  border: 1px solid var(--col-border-1);
   border-radius: 15px;
 
   display: flex;
@@ -87,8 +101,8 @@ canvas {
 
 button {
   backdrop-filter: blur(15px);
-  background: rgb(31 36 43 / 0.39);
-  border: 1px solid rgb(53 83 87 / 0.3);
+  background: var(--col-bg-2);
+  border: 1px solid var(--col-border-1);
   border-radius: 8px;
 
   font: inherit;
@@ -98,13 +112,13 @@ button {
   transition: background-color 100ms ease-out;
 
   &:hover {
-    background: rgb(56 63 73 / 0.39);
-    border: 1px solid rgb(72 108 113 / 0.3);
+    background: var(--col-bg-3);
+    border: 1px solid var(--col-border-2);
   }
 
   &:active {
-    background: rgb(82 91 104 / 0.39);
-    border: 1px solid rgb(107 148 154 / 0.3);
+    background: var(--col-bg-4);
+    border: 1px solid var(--col-border-3);
   }
 }
 </style>
