@@ -31,6 +31,10 @@ export class Vec {
         return Math.sqrt(this.x * this.x + this.y * this.y);
     }
 
+    withLength(length: number) {
+        return this.normalize().scale(length);
+    }
+
     normalize() {
         let length = this.length()
         return new Vec(this.x / length, this.y / length);

@@ -44,22 +44,18 @@ export function updateWorld(dt: number) {
             if (other !== dude) {
                 const beef = familyBeef.get(dude.family)?.get(other.family) ?? 0;
                 const relative = other.pos.sub(dude.pos);
-                const force = relative.normalize().scale((beefStrength * beef) * (dudeMass ** 2) / (relative.length() ** 2));
-                const no = relative.normalize().scale(collideStrength * ((dudeMass ** 2)) / (relative.length() ** 6));
+                const force = relative.withLength((beefStrength * beef) * (dudeMass ** 2) / (relative.length() ** 2));
+                const no = relative.withLength(collideStrength * ((dudeMass ** 2)) / (relative.length() ** 6));
                 const total = force.sub(no);
-                dude.acc = dude.acc.add(total.normalize().scale(Math.min(1000, total.length())));
+                dude.acc = dude.acc.add(total.withLength(Math.min(1000, total.length())));
             }
         }
-
-        // continue
-
-        // dude.vel = dude.vel.scale(0.99 ** dt);
 
         dude.vel = dude.vel.add(dude.acc.scale(dt));
 
         const velMax = 20 ** dudeRadius;
-        dude.vel.x = clamp(-velMax, dude.vel.x, velMax);
-        dude.vel.y = clamp(-velMax, dude.vel.y, velMax);
+
+        dude.vel = dude.vel.withLength(Math.min(dude.vel.length(), velMax));
 
 
         dude.pos = dude.pos.add(dude.vel.scale(dt));
