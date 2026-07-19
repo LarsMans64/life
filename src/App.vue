@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {onMounted, ref, useTemplateRef} from "vue";
-import {drawWorld, updateWorld} from "@/scripts/world.ts";
+import {drawWorld, randomizeFamilyBeef, updateWorld} from "@/scripts/world.ts";
 import {setupCamera, updateCamera} from "@/scripts/camera.ts";
 import {dudeInfo, simulationSpeed} from "@/scripts/global.ts";
 
@@ -51,6 +51,9 @@ function update() {
     <div>
       {{ dudeInfo.count }} cells
     </div>
+    <div>
+      <button @click="randomizeFamilyBeef">Randomize forces</button>
+    </div>
   </div>
 </template>
 
@@ -80,5 +83,28 @@ canvas {
   display: flex;
   flex-direction: column;
   align-items: start;
+}
+
+button {
+  backdrop-filter: blur(15px);
+  background: rgb(31 36 43 / 0.39);
+  border: 1px solid rgb(53 83 87 / 0.3);
+  border-radius: 8px;
+
+  font: inherit;
+  cursor: pointer;
+  padding: .2rem .5rem;
+
+  transition: background-color 100ms ease-out;
+
+  &:hover {
+    background: rgb(56 63 73 / 0.39);
+    border: 1px solid rgb(72 108 113 / 0.3);
+  }
+
+  &:active {
+    background: rgb(82 91 104 / 0.39);
+    border: 1px solid rgb(107 148 154 / 0.3);
+  }
 }
 </style>

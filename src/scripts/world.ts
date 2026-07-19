@@ -9,6 +9,7 @@ export interface Dude {
     family: number
 }
 
+const beefSpread = 20;
 const beefStrength = 4;
 const collideStrength = 50;
 const dudeRadius = .3;
@@ -16,7 +17,9 @@ const dudeMass = Math.PI * dudeRadius ** 2;
 
 const dudes: Dude[] = makeDudes(50, 4);
 
-const familyBeef: Map<number, Map<number, number>> = new Map([
+type FamilyBeef = Map<number, Map<number, number>>;
+
+let familyBeef: FamilyBeef = new Map([
     [1, new Map([[1, 6], [2, 10], [3, 10], [4, -5]])],
     [2, new Map([[1, -20], [2, 0], [3, -20], [4, 20]])],
     [3, new Map([[1, -7], [2, 0], [3, 15], [4, -3]])],
@@ -104,5 +107,17 @@ function makeDude(pos: Vec, family: number) {
         vel: new Vec(0, 0),
         acc: new Vec(0, 0),
         family,
+    }
+}
+
+export function randomizeFamilyBeef() {
+    const families = 4;
+    familyBeef = new Map();
+    for (let i = 0; i < families; i++) {
+        const family = new Map<number, number>();
+        for (let j = 0; j < families; j++) {
+            family.set(j, (Math.random() - 0.5) * 2 * beefSpread);
+        }
+        familyBeef.set(i, family);
     }
 }
