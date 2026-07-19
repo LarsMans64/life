@@ -68,9 +68,7 @@ export function updateWorld(dt: number) {
         dude.pos.x = clamp(-bound, dude.pos.x, bound);
         dude.pos.y = clamp(-bound, dude.pos.y, bound);
 
-        // console.log(dude.pos.x)
-
-        // Prevent NaN
+        // Prevent NaN explosion
         if (!dude.pos.x || !dude.pos.y) {
             dudes.splice(i, 1)
         }
