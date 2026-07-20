@@ -125,6 +125,7 @@ button {
 
   font: inherit;
   cursor: pointer;
+  color: inherit;
   padding: .2rem .5rem;
 
   transition: background-color 100ms ease-out;
@@ -142,6 +143,6 @@ button {
 
 .checkbox {
   display: flex;
-  gap: .8rem;
+  gap: 1ch;
 }
 </style>
