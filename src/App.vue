@@ -1,8 +1,15 @@
 <script setup lang="ts">
 import {onMounted, useTemplateRef} from "vue";
-import {drawWorld, familyBeefToString, randomizeFamilyBeef, readFamilyBeef, updateWorld} from "@/scripts/world.ts";
+import {
+  drawWorld,
+  familyBeefToString,
+  randomizeFamilyBeef,
+  readFamilyBeef,
+  resetDudes,
+  updateWorld
+} from "@/scripts/world.ts";
 import {setupCamera, updateCamera} from "@/scripts/camera.ts";
-import {dudeInfo, simulationSpeed} from "@/scripts/global.ts";
+import {dudeInfo, options} from "@/scripts/global.ts";
 
 const canvas = useTemplateRef("canvas");
 
@@ -53,8 +60,8 @@ function pasteSettings() {
       Pan = right click
     </div>
     <div class="slider">
-      <label for="speed">Simulation speed: {{ simulationSpeed }}</label>
-      <input v-model="simulationSpeed" id="speed" type="range" min="0" max="5" step="0.5">
+      <label for="speed">Simulation speed: {{ options.simulationSpeed }}</label>
+      <input v-model="options.simulationSpeed" id="speed" type="range" min="0" max="5" step="0.5">
     </div>
     <div>
       {{ dudeInfo.count }} cells
@@ -63,10 +70,21 @@ function pasteSettings() {
       <button @click="randomizeFamilyBeef">Randomize forces</button>
     </div>
     <div>
-      <button @click="copySettings">Copy settings</button>
+      <button @click="copySettings">Copy forces</button>
     </div>
     <div>
-      <button @click="pasteSettings()">Paste settings</button>
+      <button @click="pasteSettings">Paste forces</button>
+    </div>
+    <div class="checkbox">
+      <input v-model="options.worldBounds" id="bounds" type="checkbox">
+      <label for="bounds">Use world border</label>
+    </div>
+    <div class="checkbox">
+      <input v-model="options.centerGravity" id="gravity" type="checkbox">
+      <label for="gravity">Center gravity</label>
+    </div>
+    <div>
+      <button @click="resetDudes">Reset cells</button>
     </div>
   </div>
 </template>
@@ -120,5 +138,10 @@ button {
     background: var(--col-bg-4);
     border: 1px solid var(--col-border-3);
   }
+}
+
+.checkbox {
+  display: flex;
+  gap: .8rem;
 }
 </style>

@@ -1,6 +1,6 @@
 import {clamp, Vec} from "@/scripts/math.ts";
 import {camera, worldToScreen} from "@/scripts/camera.ts";
-import {dudeInfo, simulationSpeed} from "@/scripts/global.ts";
+import {dudeInfo, options} from "@/scripts/global.ts";
 
 export interface Dude {
     pos: Vec
@@ -15,7 +15,8 @@ const collideStrength = 50;
 const dudeRadius = .3;
 const dudeMass = Math.PI * dudeRadius ** 2;
 
-const dudes: Dude[] = makeDudes(50, 4);
+let dudes: Dude[] = [];
+resetDudes();
 
 type FamilyBeef = Map<number, Map<number, number>>;
 
@@ -35,7 +36,7 @@ const colors: Map<number, string> = new Map([
 
 export function updateWorld(dt: number) {
 
-    dt *= simulationSpeed.value;
+    dt *= options.simulationSpeed;
 
     for (const [i, dude] of dudes.entries()) {
         dude.acc = new Vec(0, 0);
@@ -53,19 +54,23 @@ export function updateWorld(dt: number) {
 
         dude.vel = dude.vel.add(dude.acc.scale(dt));
 
-        const velMax = 20 ** dudeRadius;
+        if (options.centerGravity) {
+            dude.vel = dude.vel.sub(dude.pos.scale(0.1 * dt));
+        }
 
-        dude.vel = dude.vel.withLength(Math.min(dude.vel.length(), velMax));
-
+        const maxVel = 20 ** dudeRadius;
+        dude.vel = dude.vel.withLength(Math.min(dude.vel.length(), maxVel));
 
         dude.pos = dude.pos.add(dude.vel.scale(dt));
 
-        const bound = 20;
-        if (dude.pos.x > bound || dude.pos.x < -bound) dude.vel.x = -dude.vel.x;
-        if (dude.pos.y > bound || dude.pos.y < -bound) dude.vel.y = -dude.vel.y;
+        if (options.worldBounds) {
+            const bound = 20;
+            if (dude.pos.x > bound || dude.pos.x < -bound) dude.vel.x = -dude.vel.x;
+            if (dude.pos.y > bound || dude.pos.y < -bound) dude.vel.y = -dude.vel.y;
 
-        dude.pos.x = clamp(-bound, dude.pos.x, bound);
-        dude.pos.y = clamp(-bound, dude.pos.y, bound);
+            dude.pos.x = clamp(-bound, dude.pos.x, bound);
+            dude.pos.y = clamp(-bound, dude.pos.y, bound);
+        }
 
         // Prevent NaN explosion
         if (!dude.pos.x || !dude.pos.y) {
@@ -104,6 +109,10 @@ function makeDude(pos: Vec, family: number) {
         acc: new Vec(0, 0),
         family,
     }
+}
+
+export function resetDudes() {
+    dudes = makeDudes(50, 4);
 }
 
 export function randomizeFamilyBeef() {
